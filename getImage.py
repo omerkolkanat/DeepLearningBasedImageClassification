@@ -4,7 +4,7 @@ from pymongo import MongoClient
 clientFrom = MongoClient("mongodb://<username>:<password>@ds059145.mlab.com:59145/tweets") # Teacher's database
 dbFrom = clientFrom.tweets
 
-clientTo = MongoClient("mongodb://<username>:<password>@ds145355.mlab.com:45355/justurl") # Our db to get just JsonResponse object
+clientTo = MongoClient("mongodb://<username>:<password>@ds145355.mlab.com:45355/justurl") # Our db to store just Url
 dbTo = clientTo.justurl
 
 cursor = dbFrom.JsonResponse.find() # get all tweets from teacher's database
@@ -17,5 +17,5 @@ for document in cursor:
     except:
         continue
     print text
-    result = dbTo.Url.insert_one({ "image" : text}) # add new database JsonResponse object.
+    result = dbTo.Url.insert_one({ "image" : text}) 
 
