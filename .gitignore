@@ -20,6 +20,10 @@ lib64/
 parts/
 sdist/
 var/
+train/
+test/
+outtrain/
+outtest/
 *.egg-info/
 .installed.cfg
 *.egg

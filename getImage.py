@@ -16,6 +16,6 @@ for document in cursor:
         # text2 = document['entities']['media'][0]['media_url']
     except:
         continue
-    print text
-    result = dbTo.Url.insert_one({ "image" : text}) 
+    print(text)
+    result = dbTo.Url.insert_one({"image": text})
 
