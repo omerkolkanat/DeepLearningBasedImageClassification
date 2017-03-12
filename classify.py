@@ -7,7 +7,7 @@ from scipy import ndimage
 import sys
 import time
 
-img_size = 128
+img_size = 64
 
 def create_resized_images(input_folder, output_folder, select_files=None, out_xy=(img_size, img_size)):
 
@@ -36,7 +36,7 @@ def create_resized_images(input_folder, output_folder, select_files=None, out_xy
 
                 if resized_im.mode != "RGB":  # "RGB" is a 8-bit 3 layered format
                     resized_im.convert("RGB")
-                print(filename)
+                # print(filename)
                 resized_im.save(os.path.join(output_folder, filename + ".jpg"))
             except IOError:
                 pass
@@ -146,20 +146,20 @@ num_images = 0
 train_list, test_list = load()
 training_num_images = len(train_list)
 testing_num_images = len(test_list)
-print ('step 1 : resizing')
-print ('resize training images to 64*64 and save it in outtrain folder')
+print('step 1 : resizing')
+print('resize training images to 64*64 and save it in outtrain folder')
 create_resized_images(os.getcwd() + '/train', "outtrain", train_list)
-print ('resize testing images to 64*64 and save it in outtest folder')
+print('resize testing images to 64*64 and save it in outtest folder')
 create_resized_images(os.getcwd() + '/test', "outtest", test_list)
-print ('step 2:')
+print('step 2:')
 
 num_classes = 2  # Number of classes in the classifier
 image_size = img_size  # Pixel width and height.
 num_channels = 3  # RGB
 pixel_depth = 255.0  # Number of levels per pixel.
-print ('format the dataset to the shape that is expected by neural network')
+print('format the dataset to the shape that is expected by neural network')
 training_dataset, training_labels = prepare_dataset('outtrain', training_num_images, False)
-print ('reading testing dataset')
+print('reading testing dataset')
 testing_dataset, testing_labels = prepare_dataset('outtest', testing_num_images, True)
 del testing_labels
 # building neural network
@@ -271,7 +271,7 @@ with tf.Session(graph=graph) as session:
     saver = tf.train.Saver()
     tf.global_variables_initializer().run()
     if os.path.exists("model.ckpt"):
-        print ("restore session .......")
+        print("restore session .......")
         saver.restore(session, "model.ckpt")
     print('Initialized')
     start_time = time.time()
@@ -291,7 +291,7 @@ with tf.Session(graph=graph) as session:
             print('break')
             break
         if (step % 50 == 0):
-            print ('==================================step:' + str(step) + '==========================')
+            print('==================================step:' + str(step) + '==========================')
             print('Minibatch loss at step %d: %f' % (step, l))
             keep_prob = 1.0
             print('Minibatch accuracy: %.1f%%' % accuracy(predictions, batch_labels))
@@ -300,15 +300,15 @@ with tf.Session(graph=graph) as session:
             duration = round((time.time() - start_time) / 60, 2)
             print('Elapsed time(mins): ', duration)
     keep_prob = 1.0
-    print ('training has been Done')
-    print ('prediction')
+    print('training has been Done')
+    print('prediction')
     # comput the testing output.
     inctext_testing_prediction = test_prediction.eval()[:, 1]
 
     save_output('result.csv')
 
     # saving model
-    print ('save session to model.ckpt')
+    print('save session to model.ckpt')
     saver.save(session, 'model.ckpt')
     # print(test_prediction.eval())
     # print('Test accuracy: %.1f%%' % accuracy(test_prediction.eval(), test_labels))
