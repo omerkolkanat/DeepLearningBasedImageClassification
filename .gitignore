@@ -24,6 +24,7 @@ train/
 test/
 outtrain/
 outtest/
+.idea/
 *.egg-info/
 .installed.cfg
 *.egg
