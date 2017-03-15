@@ -6,6 +6,7 @@ import os, shutil
 from scipy import ndimage
 import sys
 import time
+import re
 
 img_size = 64
 
@@ -104,7 +105,10 @@ def prepare_dataset(folder_name, num_images, is_testing_dataset):
     labels = np.ndarray(shape=(num_images, 2), dtype=np.int32)
     image_index = 0
     image_counter = image_index  # added
-    for image_name in os.listdir(folder_name):
+
+    lst = sorted(os.listdir(folder_name), key = numericalSort)
+
+    for image_name in lst:
         image_file = os.path.join(folder_name, image_name)
         if image_file.endswith('jpg'):
             if image_counter >= num_images:
@@ -136,9 +140,17 @@ def prepare_dataset(folder_name, num_images, is_testing_dataset):
     return dataset, labels
 
 
+numbers = re.compile(r'(\d+)')
+def numericalSort(value):
+    parts = numbers.split(value)
+    parts[1::2] = map(int, parts[1::2])
+    return parts
+
+
+
 train_dir = 'train'
 test_dir = 'test'
-num_steps = 20000
+num_steps = 10000
 if sys.argv and len(sys.argv) > 1:
     num_steps = int(sys.argv[1])
 # print 'num_steps='+str(num_steps)
@@ -174,7 +186,7 @@ training_labels = y_shuffled
 # split the data to training and validation dataset
 
 
-split = [0.99, 0.01]
+split = [0.90, 0.10]
 num_train_list = int(np.round(len(training_dataset) * split[0]))  # number of images in training set
 
 validation_dataset = training_dataset[num_train_list:]
@@ -184,7 +196,7 @@ validation_labls = training_labels[num_train_list:]
 training_labels = training_labels[:num_train_list]
 
 batch_size = 16  # We are gonna process batch_size images per iteration
-patch_size = 11  # Filter size is going to be [patch_size patch_size, num_channels, depth] in the first conv layer
+patch_size = 5  # Filter size is going to be [patch_size patch_size, num_channels, depth] in the first conv layer
 depth = 16
 num_hidden = 64
 keep_prob = 0.75
