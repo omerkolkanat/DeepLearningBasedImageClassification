@@ -2,6 +2,7 @@ from random import shuffle, random
 import numpy as np
 import tensorflow as tf
 from PIL import Image
+import pytesseract
 import os, shutil
 from scipy import ndimage
 import sys
@@ -274,7 +275,7 @@ def accuracy(predictions, labels):
 
 def save_output(path):
     print('saving into ' + path)
-    num_list = range(1, len(inctext_testing_prediction) + 1)
+    num_list = range(0, len(inctext_testing_prediction))
     matrix = np.column_stack((num_list, inctext_testing_prediction))
     np.savetxt(path, matrix, fmt='%1.0f,%0.2f', delimiter=',', header='id,label')
 
@@ -317,6 +318,11 @@ with tf.Session(graph=graph) as session:
     # comput the testing output.
     inctext_testing_prediction = test_prediction.eval()[:, 1]
 
+    for i in range(0, len(inctext_testing_prediction)):
+        if(inctext_testing_prediction[i] >= 0.5):
+            file = open("ocrOutput/"+str(i)+".txt", "w")
+            file.write(pytesseract.image_to_string(Image.open(test_dir+'/'+str(i)+'.jpg'), lang='tur'))
+            file.close()
     save_output('result.csv')
 
     # saving model
