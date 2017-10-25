@@ -1,4 +1,4 @@
-# DeepLearning
+# Deep Learning Based Image Classification and OCR for Twitter
 An Engineering Project that classify images with using Deep Learning Algorithms.
 
 Development steps:
